@@ -16,6 +16,7 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
 
   @override
   void dispose() {
+    // Limpa os controllers do campo após realizar o cadastro e para evitar vazamentos de memória
     _nomeController.dispose();
     _emailController.dispose();
     _senhaController.dispose();

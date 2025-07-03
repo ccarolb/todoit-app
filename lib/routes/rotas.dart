@@ -4,7 +4,6 @@ import 'package:untitled2/screens/loginUsuario_page.dart';
 import '../screens/home_page.dart';
 import '../screens/cadastroTarefa_page.dart';
 import '../screens/edicaoTarefa_page.dart';
-import '../screens/tarefa_page.dart';
 
 class Rotas {
   static const String login = '/login';
@@ -20,12 +19,6 @@ class Rotas {
         return MaterialPageRoute(builder: (_) => const HomePage());
       case login:
         return MaterialPageRoute(builder: (_) => const LoginUsuarioPage());
-
-      case exibirTarefa:
-        final tarefaId = settings.arguments as int; // Recebe o id do tarefa
-        return MaterialPageRoute(
-          builder: (context) => TarefaPage(tarefaId: tarefaId),
-        );
       case cadastrarTarefas:
         return MaterialPageRoute(builder: (_) => const CadastroTarefaPage());
       case editarTarefas:

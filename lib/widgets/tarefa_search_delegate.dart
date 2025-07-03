@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/tarefa_model.dart';
 import '../widgets/card_tarefa.dart';
 
+//Classe que implementa a SearchDelegate para pesquisar tarefas
 class TarefaSearchDelegate extends SearchDelegate {
   final List<Tarefa> tarefas;
   final Function(Tarefa) aoEditar;

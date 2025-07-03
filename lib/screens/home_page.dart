@@ -21,16 +21,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Tarefa> tarefas = [];
   String? nomeUsuario;
-  late bool modoEscuro;
+  late bool
+  modoEscuro; // Variável para armazenar se modoEscuro está ativo ou não
 
   @override
   void initState() {
     super.initState();
-    carregarTarefas();
+    carregarTarefas(); // Carrega as tarefas ao iniciar a página
     PreferenciasService.carregarTemaPreferido().then((valor) {
       setState(() {
         modoEscuro = valor;
-      });
+      }); //Carrega o tema preferido do usuário salvo com sharedPreferences
     });
   }
 
@@ -64,7 +65,9 @@ class _HomePageState extends State<HomePage> {
   ) async {
     try {
       final novoStatus =
-          tarefa.status == 0 ? 1 : 0; // Alterna entre pendente e concluída
+          tarefa.status == 0
+              ? 1
+              : 0; // Alterna entre pendente e concluída. 0 para pendente e 1 para concluída
       await TarefaService.alterarStatusTarefa(tarefaId, novoStatus);
 
       carregarTarefas();
@@ -150,6 +153,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _construirListaTarefas(List<Tarefa> lista) {
     return RefreshWrapper(
+      //Envolve a lista de tarefas com o componente RefreshWrapper para permitir o pull-to-refresh (arrastar para cima para recarregar)
       onRefresh: carregarTarefas,
       child:
           lista.isEmpty
@@ -185,6 +189,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //Aqui, separamos as tarefas pendentes e concluídas em listas diferentes
+    //E depois juntamos elas em uma lista ordenada, onde as pendentes aparecem primeiro
+    //Isso é útil para poder fazer a filtragem pelas abas na appbar
     final tarefasPendentes = tarefas.where((t) => t.status == 0).toList();
     final tarefasConcluidas = tarefas.where((t) => t.status == 1).toList();
     final todasOrdenadas = [...tarefasPendentes, ...tarefasConcluidas];
@@ -211,6 +218,7 @@ class _HomePageState extends State<HomePage> {
                 showSearch(
                   context: context,
                   delegate: TarefaSearchDelegate(
+                    //Aqui é chamado o método de pesquisa, com o delegate que é um serviço com métodos sobrescritos que permite várias funcionalidades de pesquisa
                     tarefas,
                     aoEditar: (tarefa) {
                       Navigator.push(
@@ -221,10 +229,16 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                     aoExcluir:
-                        (tarefa) => _confirmarExclusao(context, tarefa.id),
+                        (tarefa) => _confirmarExclusao(
+                          context,
+                          tarefa.id,
+                        ), //TO-DO: refatorar para não precisar passar a exclusão na pesquisa, já que ela não é utilizada
                     aoAlterarStatus:
-                        (tarefa) =>
-                            _alterarStatusTarefa(context, tarefa, tarefa.id),
+                        (tarefa) => _alterarStatusTarefa(
+                          context,
+                          tarefa,
+                          tarefa.id,
+                        ), //TO-DO: refatorar para não precisar passar a alteração de status (concluido/pendente) na pesquisa, já que ela não é utilizada
                   ),
                 );
               },
@@ -233,12 +247,13 @@ class _HomePageState extends State<HomePage> {
               icon: const Icon(Icons.brightness_6),
               tooltip: 'Alternar modo noturno',
               onPressed: () {
-                modoEscuro = !modoEscuro;
+                modoEscuro = !modoEscuro; //Alterna o modo escuro
 
+                //Salva a preferência do usuário com relação ao tema (último tema utilizado antes de fechar o app)
                 PreferenciasService.salvarPreferenciaTemaApp(modoEscuro);
-                MyApp.of(
-                  context,
-                ).changeTheme(modoEscuro ? ThemeMode.dark : ThemeMode.light);
+                MyApp.of(context).changeTheme(
+                  modoEscuro ? ThemeMode.dark : ThemeMode.light,
+                ); //Passa o novo tema para o MyApp, que é o widget principal do app, criado na main.dart
               },
             ),
           ],
@@ -247,7 +262,10 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(24),
           child: TabBarView(
             children: [
-              _construirListaTarefas(todasOrdenadas),
+              _construirListaTarefas(
+                todasOrdenadas,
+              ), //Passa as tarefas ordenadas
+              //Passa as tarefas pendentes e concluídas separadamente para as abas
               _construirListaTarefas(tarefasPendentes),
               _construirListaTarefas(tarefasConcluidas),
             ],

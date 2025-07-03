@@ -28,7 +28,9 @@ class _EdicaoTarefaPageState extends State<EdicaoTarefaPage> {
 
   Future<void> _selecionarImagem(ImageSource origem) async {
     final picker = ImagePicker();
-    final imagem = await picker.pickImage(source: origem);
+    final imagem = await picker.pickImage(
+      source: origem,
+    ); // Seleciona a imagem da câmera ou galeria, a origem é passada como parâmetro
 
     if (imagem != null) {
       setState(() {

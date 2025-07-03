@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../models/tarefa_model.dart';
 
+// Classe que gerencia as operações relacionadas às tarefas
 class TarefaService {
   static const String baseUrl =
       'http://192.168.1.100/diversogeek/controller/tarefa.php';

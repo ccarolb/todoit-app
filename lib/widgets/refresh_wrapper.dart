@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//Classe que utiliza o RefreshIndicator para recarregar a tela ao puxar para baixo
 class RefreshWrapper extends StatelessWidget {
   final Future<void> Function() onRefresh;
   final Widget child;

@@ -32,7 +32,9 @@ class _CadastroTarefaPageState extends State<CadastroTarefaPage> {
 
     if (imagem != null) {
       setState(() {
-        _imagemSelecionada = File(imagem.path);
+        _imagemSelecionada = File(
+          imagem.path,
+        ); //Armazena o caminho da imagem selecionada
       });
     }
   }
@@ -139,7 +141,9 @@ class _CadastroTarefaPageState extends State<CadastroTarefaPage> {
                     value: lembrarTarefa,
                     onChanged: (valor) {
                       setState(() {
-                        lembrarTarefa = valor ?? false;
+                        lembrarTarefa =
+                            valor ??
+                            false; //Caso o checkbox esteja marcado, atribui lembrarTarefa como true
                       });
                     },
                   ),
@@ -149,10 +153,12 @@ class _CadastroTarefaPageState extends State<CadastroTarefaPage> {
                     TextButton(
                       onPressed: () async {
                         final agora = tz.TZDateTime.from(
+                          // Obtém a data e hora atual utilizando a lib timezone
                           DateTime.now(),
                           tz.getLocation("America/Sao_Paulo"),
                         );
                         final horarioSelecionado = await showTimePicker(
+                          // Exibe o seletor de horário
                           context: context,
                           initialTime: TimeOfDay(
                             hour: agora.hour,
@@ -184,6 +190,7 @@ class _CadastroTarefaPageState extends State<CadastroTarefaPage> {
                 onPressed: () async {
                   await _cadastrarTarefa();
                   if (lembrarTarefa && horarioLembrete != null) {
+                    //Aqui, como lembrarTarefa é true, e o usuário definiu um horário, o lembrete será agendado
                     final horario = tz.TZDateTime.local(
                       horarioLembrete!.year,
                       horarioLembrete!.month,

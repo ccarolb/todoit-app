@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//Widget que constrói um card de tarefa para exibir na tela inicial e na de pesquisa
 Widget construirCardTarefas(
   String titulo,
   String descricao,
@@ -51,6 +52,7 @@ Widget construirCardTarefas(
   );
 }
 
+//Widget que determina o que irá dentro do card de tarefa
 Widget construirConteudoCard({
   required String titulo,
   required String descricao,

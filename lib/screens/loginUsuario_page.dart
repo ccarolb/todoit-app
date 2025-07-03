@@ -16,7 +16,7 @@ class _LoginUsuarioPageState extends State<LoginUsuarioPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
 
-  @override
+  @override // Limpa os controllers do campo após realizar o cadastro e para evitar vazamentos de memória
   void dispose() {
     _emailController.dispose();
     _senhaController.dispose();
@@ -72,7 +72,10 @@ class _LoginUsuarioPageState extends State<LoginUsuarioPage> {
       body: Padding(
         padding: const EdgeInsets.only(top: 250),
         child: Material(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color:
+              Theme.of(
+                context,
+              ).scaffoldBackgroundColor, //Força que a cor de fundo seja a definida pelo tema do app (claro ou escuro)
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

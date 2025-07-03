@@ -1,13 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+//Classe que utiliza a lib do SharedPreferences para salvar e carregar as preferências do usuário
+// Neste caso, o tema do app (claro ou escuro)
 class PreferenciasService {
-  static const _chaveEmail = 'usuario_email';
-
-  static Future<void> salvarDadosUsuario({required String email}) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_chaveEmail, email);
-  }
-
   static Future<void> salvarPreferenciaTemaApp(bool escuro) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('modo_escuro', escuro);
