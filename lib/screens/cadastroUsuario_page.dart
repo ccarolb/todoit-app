@@ -153,7 +153,7 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                               Navigator.pop(context); // retorna à tela de login
                             },
                             child: const Text(
-                              'Já tem uma conta? Voltar ao login',
+                              'Já tem uma conta? Voltar ao login.',
                             ),
                           ),
                         ],
