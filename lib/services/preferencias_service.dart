@@ -4,13 +4,9 @@ class PreferenciasService {
   static const _chaveEmail = 'usuario_email';
   static const _chaveNome = 'usuario_nome';
 
-  static Future<void> salvarDadosUsuario({
-    required String email,
-    required String nome,
-  }) async {
+  static Future<void> salvarDadosUsuario({required String email}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_chaveEmail, email);
-    await prefs.setString(_chaveNome, nome);
   }
 
   static Future<String?> obterEmail() async {

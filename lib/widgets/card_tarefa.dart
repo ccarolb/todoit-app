@@ -23,7 +23,7 @@ Widget construirCardTarefas(
               descricao: descricao,
               concluida: concluida,
               botaoEditar: IconButton(
-                icon: Icon(Icons.edit, color: Colors.blue),
+                icon: Icon(Icons.edit),
                 onPressed: () {
                   editar();
                 },

@@ -21,6 +21,10 @@ class UsuarioService {
 
   static Future<http.Response> loginUsuario(String email, String senha) async {
     final url = Uri.parse('$baseUrl?acao=login');
+
+    if (email.isEmpty || senha.isEmpty) {
+      throw Exception('Email e senha não podem ser vazios');
+    }
     final response = await http.post(
       url,
       body: {'email': email, 'senha': senha},
@@ -28,10 +32,8 @@ class UsuarioService {
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
-      await PreferenciasService.salvarDadosUsuario(
-        email: body['email'],
-        nome: body['nome'],
-      );
+      final emailRetornado = body['email'] ?? '';
+      await PreferenciasService.salvarDadosUsuario(email: emailRetornado);
     }
 
     return response;

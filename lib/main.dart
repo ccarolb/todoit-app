@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/home_page.dart';
+import 'screens/loginUsuario_page.dart';
 import 'services/lembrete_service.dart';
 
 void main() async {
@@ -11,13 +12,20 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final modoEscuro = prefs.getBool('modo_escuro') ?? false;
+  final logado = prefs.getBool('logado') ?? false;
 
-  runApp(MyApp(modoEscuroInicial: modoEscuro));
+  runApp(MyApp(modoEscuroInicial: modoEscuro, estaLogado: logado));
 }
 
 class MyApp extends StatefulWidget {
   final bool modoEscuroInicial;
-  const MyApp({Key? key, required this.modoEscuroInicial}) : super(key: key);
+  final bool estaLogado;
+
+  const MyApp({
+    Key? key,
+    required this.modoEscuroInicial,
+    required this.estaLogado,
+  }) : super(key: key);
 
   static _MyAppState of(BuildContext context) =>
       context.findAncestorStateOfType<_MyAppState>()!;
@@ -43,6 +51,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final usuarioLogado =
+        widget.estaLogado ? const HomePage() : const LoginUsuarioPage();
     return MaterialApp(
       title: 'to do it!',
       theme: ThemeData.light().copyWith(
@@ -51,7 +61,7 @@ class _MyAppState extends State<MyApp> {
       ),
       darkTheme: ThemeData.dark(),
       themeMode: _themeMode,
-      home: const HomePage(),
+      home: usuarioLogado,
     );
   }
 }

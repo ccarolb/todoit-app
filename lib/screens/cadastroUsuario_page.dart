@@ -10,15 +10,20 @@ class CadastroUsuarioPage extends StatefulWidget {
 
 class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
   final _formKey = GlobalKey<FormState>();
-
   final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
 
-  void _cadastrarUsuario() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+  @override
+  void dispose() {
+    _nomeController.dispose();
+    _emailController.dispose();
+    _senhaController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _cadastrarUsuario() async {
+    if (!_formKey.currentState!.validate()) return;
 
     final response = await UsuarioService.cadastrarUsuario(
       _nomeController.text.trim(),
@@ -26,26 +31,17 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
       _senhaController.text.trim(),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Usuario registrado com sucesso!',
+          content: const Text(
+            'Usuário registrado com sucesso!',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-
           backgroundColor: Colors.green,
-          action: SnackBarAction(
-            label: 'Fechar',
-            textColor: Colors.white,
-            onPressed: () {},
-          ),
         ),
       );
-
-      _nomeController.clear();
-      _emailController.clear();
-      _senhaController.clear();
+      Navigator.pop(context);
     } else if (response.statusCode == 409) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -54,26 +50,16 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.red,
-          action: SnackBarAction(
-            label: 'Fechar',
-            textColor: Colors.white,
-            onPressed: () {},
-          ),
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
+          content: const Text(
             'Erro ao cadastrar usuário. Tente novamente!',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.red,
-          action: SnackBarAction(
-            label: 'Fechar',
-            textColor: Colors.white,
-            onPressed: () {},
-          ),
         ),
       );
     }
@@ -82,69 +68,101 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(30, 16, 30, 40),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Divider(),
-              const SizedBox(height: 10),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 250),
+        child: Material(
+          color: Theme.of(context).scaffoldBackgroundColor,
 
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: "Nome",
-                  hintText: 'Insira seu nome completo',
-                  border: OutlineInputBorder(),
+          child: Center(
+            child: Column(
+              children: [
+                const Text(
+                  'Crie sua conta no to-do-it!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.bold,
+                    height: 1.62,
+                    letterSpacing: 0.50,
+                  ),
                 ),
-                controller: _nomeController,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator:
-                    (value) =>
-                        1 <= (value?.length ?? 0)
-                            ? null
-                            : 'O título não pode ficar em branco.',
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: "E-mail",
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _nomeController,
+                            decoration: const InputDecoration(
+                              labelText: 'Nome completo',
+                              hintText: 'Ex: Jane Doe',
+                              border: OutlineInputBorder(),
+                            ),
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator:
+                                (value) =>
+                                    value != null && value.isNotEmpty
+                                        ? null
+                                        : 'Informe seu nome completo.',
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              labelText: 'E-mail',
+                              hintText: 'janedoe@foruslabs.com',
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator:
+                                (value) =>
+                                    (value?.contains('@') ?? false)
+                                        ? null
+                                        : 'Digite um e-mail válido.',
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _senhaController,
+                            decoration: const InputDecoration(
+                              labelText: 'Senha',
+                              hintText: 'Crie uma senha segura',
+                              border: OutlineInputBorder(),
+                            ),
+                            obscureText: true,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator:
+                                (value) =>
+                                    (value != null && value.length >= 4)
+                                        ? null
+                                        : 'A senha precisa ter pelo menos 4 caracteres.',
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            child: const Text('Cadastrar'),
+                            onPressed: _cadastrarUsuario,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // retorna à tela de login
+                            },
+                            child: const Text(
+                              'Já tem uma conta? Voltar ao login',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator:
-                    (value) =>
-                        1 <= (value?.length ?? 0)
-                            ? null
-                            : 'O e-mail não pode ficar em branco.',
-              ),
-              const SizedBox(height: 30),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: "Senha",
-                  hintText: "Insira uma senha",
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-                controller: _senhaController,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-              ),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: const Text('Cadastrar'),
-                  onPressed: () {
-                    _cadastrarUsuario();
-                  },
-                ),
-              ),
-              const SizedBox(height: 10),
-            ],
+              ],
+            ),
           ),
         ),
       ),

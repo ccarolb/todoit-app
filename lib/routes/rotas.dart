@@ -18,12 +18,13 @@ class Rotas {
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case home:
+        return MaterialPageRoute(builder: (_) => const HomePage());
       case onboarding:
         return MaterialPageRoute(builder: (_) => const OnboardingPage());
       case login:
         return MaterialPageRoute(builder: (_) => const LoginUsuarioPage());
-      case home:
-        return MaterialPageRoute(builder: (_) => const HomePage());
+
       case exibirTarefa:
         final tarefaId = settings.arguments as int; // Recebe o id do tarefa
         return MaterialPageRoute(
