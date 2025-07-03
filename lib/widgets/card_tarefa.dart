@@ -70,9 +70,34 @@ Widget construirConteudoCard({
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(titulo, style: estiloTexto),
+            Text(
+              titulo,
+              style: TextStyle(
+                fontSize: 13,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+                height: 1.62,
+                letterSpacing: 0.50,
+                decoration:
+                    concluida
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+              ),
+            ),
+            Opacity(
+              opacity: 0.50,
+              child: Text(
+                descricao,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w400,
+                  height: 1,
+                  letterSpacing: 0.30,
+                ),
+              ),
+            ),
             SizedBox(height: 4),
-            Text(descricao, style: estiloTexto),
           ],
         ),
       ),

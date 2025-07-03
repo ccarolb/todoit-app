@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/home_page.dart';
+import 'services/lembrete_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Necessário para chamar o sharedPreferences
+  await Permission.notification.request();
+  await inicializarNotificacoes(); // Inicializa as notificações, se necessário
+
   final prefs = await SharedPreferences.getInstance();
   final modoEscuro = prefs.getBool('modo_escuro') ?? false;
 
@@ -40,7 +45,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'to do it!',
-      theme: ThemeData.light(),
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
+      ),
       darkTheme: ThemeData.dark(),
       themeMode: _themeMode,
       home: const HomePage(),

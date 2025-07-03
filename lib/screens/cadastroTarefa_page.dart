@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../services/lembrete_service.dart';
 import '../services/tarefa_service.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class CadastroTarefaPage extends StatefulWidget {
   const CadastroTarefaPage({super.key});
@@ -21,6 +22,7 @@ class _CadastroTarefaPageState extends State<CadastroTarefaPage> {
 
   File? _imagemSelecionada;
 
+  String tituloTarefa = '';
   bool lembrarTarefa = false;
   DateTime? horarioLembrete;
 
@@ -39,13 +41,12 @@ class _CadastroTarefaPageState extends State<CadastroTarefaPage> {
     if (!_formKey.currentState!.validate()) return;
 
     try {
+      tituloTarefa = _tituloController.text.trim();
       final resposta = await TarefaService.cadastrarTarefa(
-        titulo: _tituloController.text.trim(),
+        titulo: tituloTarefa,
         descricao: _descricaoController.text.trim(),
         imagem: _imagemSelecionada,
       );
-
-      final corpo = await resposta.stream.bytesToString();
 
       if (resposta.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -147,12 +148,19 @@ class _CadastroTarefaPageState extends State<CadastroTarefaPage> {
                   if (lembrarTarefa)
                     TextButton(
                       onPressed: () async {
+                        final agora = tz.TZDateTime.from(
+                          DateTime.now(),
+                          tz.getLocation("America/Sao_Paulo"),
+                        );
                         final horarioSelecionado = await showTimePicker(
                           context: context,
-                          initialTime: TimeOfDay.now(),
+                          initialTime: TimeOfDay(
+                            hour: agora.hour,
+                            minute: agora.minute,
+                          ),
+                          helpText: 'Selecione o horário do lembrete',
                         );
                         if (horarioSelecionado != null) {
-                          final agora = DateTime.now();
                           horarioLembrete = DateTime(
                             agora.year,
                             agora.month,
@@ -175,10 +183,20 @@ class _CadastroTarefaPageState extends State<CadastroTarefaPage> {
               ElevatedButton(
                 onPressed: () async {
                   await _cadastrarTarefa();
-                  await agendarLembreteTarefa(
-                    titulo: _tituloController.value.text,
-                    horario: horarioLembrete!,
-                  );
+                  if (lembrarTarefa && horarioLembrete != null) {
+                    final horario = tz.TZDateTime.local(
+                      horarioLembrete!.year,
+                      horarioLembrete!.month,
+                      horarioLembrete!.day,
+                      horarioLembrete!.hour,
+                      horarioLembrete!.minute,
+                    );
+
+                    await agendarLembreteTarefa(
+                      titulo: tituloTarefa,
+                      horario: horario,
+                    );
+                  }
                 },
                 child: Text('Salvar tarefa'),
               ),
