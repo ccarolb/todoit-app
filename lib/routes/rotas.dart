@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:untitled2/screens/cadastroUsuario_page.dart';
 import 'package:untitled2/screens/loginUsuario_page.dart';
-import '../screens/onboarding_page.dart';
 import '../screens/home_page.dart';
 import '../screens/cadastroTarefa_page.dart';
 import '../screens/edicaoTarefa_page.dart';
 import '../screens/tarefa_page.dart';
 
 class Rotas {
-  static const String onboarding = '/onboarding';
   static const String login = '/login';
   static const String home = '/home';
   static const String cadastrarTarefas = '/cadastrar-tarefas';
@@ -20,8 +18,6 @@ class Rotas {
     switch (settings.name) {
       case home:
         return MaterialPageRoute(builder: (_) => const HomePage());
-      case onboarding:
-        return MaterialPageRoute(builder: (_) => const OnboardingPage());
       case login:
         return MaterialPageRoute(builder: (_) => const LoginUsuarioPage());
 

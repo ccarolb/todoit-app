@@ -5,7 +5,7 @@ import '../models/tarefa_model.dart';
 
 class TarefaService {
   static const String baseUrl =
-      'http://192.168.1.105/diversogeek/controller/tarefa.php';
+      'http://192.168.1.100/diversogeek/controller/tarefa.php';
 
   static Future<List<Tarefa>> buscarTarefas() async {
     final url = Uri.parse('$baseUrl?acao=listarTarefas');

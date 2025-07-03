@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:untitled2/services/preferencias_service.dart';
 
 import '../services/usuario_service.dart';
 import 'cadastroUsuario_page.dart';

@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:untitled2/services/preferencias_service.dart';
-import '../models/usuario_model.dart';
 
 class UsuarioService {
   static const String baseUrl =
-      'http://192.168.1.105/diversogeek/controller/usuario.php';
+      'http://192.168.1.100/diversogeek/controller/usuario.php';
 
   static Future<http.Response> cadastrarUsuario(
     String nome,

@@ -59,10 +59,6 @@ Widget construirConteudoCard({
   Widget? botaoEditar,
   Widget? botaoExcluir,
 }) {
-  final estiloTexto = TextStyle(
-    decoration: concluida ? TextDecoration.lineThrough : TextDecoration.none,
-    color: concluida ? Colors.grey : null,
-  );
   return Row(
     children: [
       checkBox ?? SizedBox(width: 15),
